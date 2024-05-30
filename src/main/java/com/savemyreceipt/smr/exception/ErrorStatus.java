@@ -24,6 +24,7 @@ public enum ErrorStatus {
      */
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원 정보를 찾을 수 없습니다."),
     GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "그룹 정보를 찾을 수 없습니다."),
+    GROUP_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "그룹 멤버 정보를 찾을 수 없습니다."),
 
     ;
 
