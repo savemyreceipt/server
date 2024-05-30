@@ -48,6 +48,9 @@ dependencies {
 
 	// sendgrid
 	implementation 'com.sendgrid:sendgrid-java:4.10.2'
+
+	// gemini
+	implementation 'com.google.cloud:google-cloud-vertexai:0.4.0'
 }
 
 tasks.named('test') {
