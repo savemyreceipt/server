@@ -3,8 +3,6 @@ package com.savemyreceipt.smr.service;
 import com.savemyreceipt.smr.DTO.member.request.MemberRequestDto;
 import com.savemyreceipt.smr.DTO.member.response.MemberResponseDto;
 import com.savemyreceipt.smr.domain.Member;
-import com.savemyreceipt.smr.infrastructure.GroupMemberRepository;
-import com.savemyreceipt.smr.infrastructure.GroupRepository;
 import com.savemyreceipt.smr.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
