@@ -26,6 +26,7 @@ public enum SuccessStatus {
      * 204 NO_CONTENT
      */
     JOIN_GROUP_SUCCESS(HttpStatus.NO_CONTENT, "그룹 가입 성공"),
+    UPDATE_MEMBER_SUCCESS(HttpStatus.NO_CONTENT, "사용자 정보 수정 성공"),
     ;
 
     private final HttpStatus httpStatus;
