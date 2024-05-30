@@ -2,17 +2,24 @@ package com.savemyreceipt.smr.service;
 
 import com.savemyreceipt.smr.DTO.group.request.GroupRequestDto;
 import com.savemyreceipt.smr.DTO.group.response.GroupResponseDto;
+import com.savemyreceipt.smr.DTO.receipt.response.ReceiptListResponseDto;
+import com.savemyreceipt.smr.DTO.receipt.response.ReceiptResponseDto;
 import com.savemyreceipt.smr.domain.Group;
 import com.savemyreceipt.smr.domain.GroupMember;
 import com.savemyreceipt.smr.domain.Member;
+import com.savemyreceipt.smr.domain.Receipt;
 import com.savemyreceipt.smr.enums.Role;
 import com.savemyreceipt.smr.exception.ErrorStatus;
 import com.savemyreceipt.smr.exception.model.CustomException;
 import com.savemyreceipt.smr.infrastructure.GroupMemberRepository;
 import com.savemyreceipt.smr.infrastructure.GroupRepository;
 import com.savemyreceipt.smr.infrastructure.MemberRepository;
+import com.savemyreceipt.smr.infrastructure.ReceiptRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +30,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final MemberRepository memberRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final ReceiptRepository receiptRepository;
 
     @Transactional(readOnly = true)
     public List<GroupResponseDto> getGroups(String email) {
@@ -89,5 +97,15 @@ public class GroupService {
             .role(role)
             .build();
         groupMemberRepository.save(groupMember);
+    }
+
+    @Transactional(readOnly = true)
+    public ReceiptListResponseDto getReceiptListInGroup(String email, Long groupId, int page) {
+        Member member = memberRepository.getMemberByEmail(email);
+        Group group = groupRepository.getGroupById(groupId);
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Receipt> receiptPage = receiptRepository.getReceiptListInGroup(member, group, pageable);
+        Page<ReceiptResponseDto> receiptResponseDtos = receiptPage.map(ReceiptResponseDto::of);
+        return new ReceiptListResponseDto(receiptResponseDtos);
     }
 }

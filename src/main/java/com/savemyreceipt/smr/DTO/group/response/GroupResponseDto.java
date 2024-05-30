@@ -1,5 +1,6 @@
 package com.savemyreceipt.smr.DTO.group.response;
 
+import com.savemyreceipt.smr.domain.GroupMember;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
