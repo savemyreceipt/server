@@ -15,6 +15,7 @@ public enum SuccessStatus {
     GET_MEMBER_SUCCESS(HttpStatus.OK, "사용자 조회 성공"),
     GET_GROUP_SUCCESS(HttpStatus.OK, "그룹 조회 성공"),
     SEARCH_GROUP_SUCCESS(HttpStatus.OK, "그룹 검색 성공"),
+    GET_RECEIPT_SUCCESS(HttpStatus.OK, "영수증 조회 성공"),
 
     /*
      * 201 CREATED

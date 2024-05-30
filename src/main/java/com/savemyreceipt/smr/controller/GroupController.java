@@ -3,6 +3,7 @@ package com.savemyreceipt.smr.controller;
 import com.savemyreceipt.smr.DTO.ApiResponseDto;
 import com.savemyreceipt.smr.DTO.group.request.GroupRequestDto;
 import com.savemyreceipt.smr.DTO.group.response.GroupResponseDto;
+import com.savemyreceipt.smr.DTO.receipt.response.ReceiptListResponseDto;
 import com.savemyreceipt.smr.enums.Role;
 import com.savemyreceipt.smr.exception.SuccessStatus;
 import com.savemyreceipt.smr.service.GroupService;
@@ -57,6 +58,12 @@ public class GroupController {
         @PathVariable Long groupId, @RequestParam Role role) {
         groupService.joinGroup(user.getUsername(), groupId, role);
         return ApiResponseDto.success(SuccessStatus.JOIN_GROUP_SUCCESS);
+    }
+
+    @GetMapping("/{groupId}/receipt")
+    public ApiResponseDto<ReceiptListResponseDto> getReceiptListInGroup(
+        @AuthenticationPrincipal User user, @PathVariable Long groupId, @RequestParam int page) {
+        return ApiResponseDto.success(SuccessStatus.GET_RECEIPT_SUCCESS, groupService.getReceiptListInGroup(user.getUsername(), groupId, page));
     }
 
 }
