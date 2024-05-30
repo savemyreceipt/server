@@ -35,8 +35,4 @@ public class Group extends AuditingTimeEntity {
         this.description = description;
     }
 
-    public Long getMemberCount() {
-        return this.getGroupMembers().stream().count();
-    }
-
 }
