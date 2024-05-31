@@ -22,6 +22,7 @@ public enum SuccessStatus {
      */
     SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입 성공"),
     CREATE_GROUP_SUCCESS(HttpStatus.CREATED, "그룹 생성 성공"),
+    UPLOAD_RECEIPT_SUCCESS(HttpStatus.CREATED, "영수증 업로드 성공"),
 
     /*
      * 204 NO_CONTENT

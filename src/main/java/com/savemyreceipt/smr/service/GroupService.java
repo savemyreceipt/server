@@ -45,6 +45,7 @@ public class GroupService {
                 .organization(groupMember.getGroup().getOrganization())
                 .description(groupMember.getGroup().getDescription())
                 .memberCount(groupMemberRepository.countByGroupId(groupMember.getGroup().getId()))
+                .receiptCount(receiptRepository.countByGroup(groupMember.getGroup()))
                 .isAccountant(groupMember.getRole().equals(Role.ACCOUNTANT))
                 .build()).toList();
     }
@@ -80,13 +81,20 @@ public class GroupService {
     public void joinGroup(String email, Long groupId, Role role) {
         Member member = memberRepository.getMemberByEmail(email);
         Group group = groupRepository.getGroupById(groupId);
-        check(member);
+        check(member, group);
         join(member, group, role);
     }
 
-    private void check(Member member) {
+    private void check(Member member, Group group) {
+        
+        // 회원이 속한 그룹의 수가 10개를 초과할 수 없다.
         if (groupMemberRepository.countByMemberId(member.getId()) >= 10) {
             throw new CustomException(ErrorStatus.TOO_MUCH_GROUPS, ErrorStatus.TOO_MUCH_GROUPS.getMessage());
+        }
+
+        // 이미 가입한 그룹에 다시 가입할 수 없다.
+        if (groupMemberRepository.existsByGroupIdAndMemberId(group.getId(), member.getId())) {
+            throw new CustomException(ErrorStatus.ALREADY_JOINED_GROUP, ErrorStatus.ALREADY_JOINED_GROUP.getMessage());
         }
     }
 

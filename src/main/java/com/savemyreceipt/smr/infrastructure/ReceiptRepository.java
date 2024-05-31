@@ -16,6 +16,8 @@ public interface ReceiptRepository extends JpaRepository<Receipt, Long> {
     @Query("select r from Receipt r where r.group = :group")
     Page<Receipt> getReceiptListInGroup(Group group, Pageable pageable);
 
+    Long countByGroup(Group group);
+
     @Query("select r from Receipt r where r.member = :member AND r.group = :group")
     Page<Receipt> getReceiptListInGroup(@Param("member")Member member, @Param("group")Group group, Pageable pageable);
 }
