@@ -1,5 +1,6 @@
 package com.savemyreceipt.smr.service;
 
+import com.savemyreceipt.smr.DTO.receipt.request.ReceiptUpdateRequestDto;
 import com.savemyreceipt.smr.DTO.receipt.response.ReceiptResponseDto;
 import com.savemyreceipt.smr.domain.Group;
 import com.savemyreceipt.smr.domain.GroupMember;
@@ -47,6 +48,16 @@ public class ReceiptService {
         this.GS_URI_PREFIX = "gs://" + bucketName + "/";
     }
 
+    @Transactional(readOnly = true)
+    public ReceiptResponseDto getReceipt(String email, Long receiptId) {
+        Member member = memberRepository.getMemberByEmail(email);
+        Receipt receipt = receiptRepository.getReceiptById(receiptId);
+        if (!receipt.getMember().equals(member)) {
+            throw new CustomException(ErrorStatus.UNAUTHORIZED_MEMBER_ACCESS, ErrorStatus.UNAUTHORIZED_MEMBER_ACCESS.getMessage());
+        }
+        return ReceiptResponseDto.of(receipt);
+    }
+
     @Transactional
     public ReceiptResponseDto uploadReceipt(String email, MultipartFile file, Long groupId) {
         Member member = memberRepository.getMemberByEmail(email);
@@ -74,5 +85,26 @@ public class ReceiptService {
         } catch (IOException e) {
             throw new CustomException(ErrorStatus.IMAGE_UPLOAD_FAILED, ErrorStatus.IMAGE_UPLOAD_FAILED.getMessage());
         }
+    }
+
+    @Transactional
+    public void updateReceipt(String email, Long receiptId, ReceiptUpdateRequestDto receiptUpdateRequestDto) {
+        Member member = memberRepository.getMemberByEmail(email);
+        Receipt receipt = receiptRepository.getReceiptById(receiptId);
+        if (!receipt.getMember().equals(member)) {
+            throw new CustomException(ErrorStatus.UNAUTHORIZED_MEMBER_ACCESS, ErrorStatus.UNAUTHORIZED_MEMBER_ACCESS.getMessage());
+        }
+        receipt.updateReceipt(receiptUpdateRequestDto);
+        receiptRepository.save(receipt);
+    }
+
+    @Transactional
+    public void deleteReceipt(String email, Long receiptId) {
+        Member member = memberRepository.getMemberByEmail(email);
+        Receipt receipt = receiptRepository.getReceiptById(receiptId);
+        if (!receipt.getMember().equals(member)) {
+            throw new CustomException(ErrorStatus.UNAUTHORIZED_MEMBER_ACCESS, ErrorStatus.UNAUTHORIZED_MEMBER_ACCESS.getMessage());
+        }
+        receiptRepository.delete(receipt);
     }
 }

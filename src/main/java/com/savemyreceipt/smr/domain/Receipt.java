@@ -1,5 +1,6 @@
 package com.savemyreceipt.smr.domain;
 
+import com.savemyreceipt.smr.DTO.receipt.request.ReceiptUpdateRequestDto;
 import com.savemyreceipt.smr.utils.ReceiptInfo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -66,6 +67,15 @@ public class Receipt extends AuditingTimeEntity {
     public void updateReceipt(ReceiptInfo receiptInfo) {
         this.purchasedAt = receiptInfo.getPurchaseDate();
         this.price = receiptInfo.getTotalPrice();
+    }
+
+    public void updateReceipt(ReceiptUpdateRequestDto receiptUpdateRequestDto) {
+        this.category = receiptUpdateRequestDto.getCategory();
+        this.description = receiptUpdateRequestDto.getDescription();
+        this.memo = receiptUpdateRequestDto.getMemo();
+        this.purchasedAt = receiptUpdateRequestDto.getPurchaseDate();
+        this.price = receiptUpdateRequestDto.getPrice();
+        check();
     }
 
 }
