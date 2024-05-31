@@ -1,7 +1,9 @@
 package com.savemyreceipt.smr.exception.model;
 
 import com.savemyreceipt.smr.exception.ErrorStatus;
+import lombok.Getter;
 
+@Getter
 public class CustomException extends RuntimeException {
 
     private final ErrorStatus errorStatus;
