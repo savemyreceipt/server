@@ -60,6 +60,7 @@ public class GroupController {
         return ApiResponseDto.success(SuccessStatus.JOIN_GROUP_SUCCESS);
     }
 
+    @Operation(summary = "그룹 내 영수증 조회", description = "그룹 내 영수증을 조회합니다. 회계인 경우 전체 영수증을, 일반 사용자인 경우 자신이 업로드한 영수증을 조회합니다.")
     @GetMapping("/{groupId}/receipt")
     public ApiResponseDto<ReceiptListResponseDto> getReceiptListInGroup(
         @AuthenticationPrincipal User user, @PathVariable Long groupId, @RequestParam int page) {

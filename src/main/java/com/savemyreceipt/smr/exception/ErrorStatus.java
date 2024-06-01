@@ -15,6 +15,7 @@ public enum ErrorStatus {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad Request"),
     TOO_MUCH_GROUPS(HttpStatus.BAD_REQUEST, "그룹은 최대 10개까지 가입 가능합니다."),
     ALREADY_JOINED_GROUP(HttpStatus.BAD_REQUEST, "이미 가입한 그룹입니다."),
+    RECEIPT_ALREADY_CHECKED(HttpStatus.BAD_REQUEST, "이미 확인한 영수증입니다."),
 
     /*
      * 401 Unauthorized
