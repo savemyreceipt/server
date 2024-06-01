@@ -5,7 +5,7 @@ FROM eclipse-temurin:17-jdk AS build
 WORKDIR /opt/app
 
 # JAR 파일을 컨테이너에 복사
-ARG JAR_FILE=build/libs/aeye-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=build/libs/smr-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
 # 애플리케이션 실행
