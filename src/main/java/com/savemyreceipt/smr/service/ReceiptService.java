@@ -6,6 +6,7 @@ import com.savemyreceipt.smr.domain.Group;
 import com.savemyreceipt.smr.domain.GroupMember;
 import com.savemyreceipt.smr.domain.Member;
 import com.savemyreceipt.smr.domain.Receipt;
+import com.savemyreceipt.smr.enums.Role;
 import com.savemyreceipt.smr.exception.ErrorStatus;
 import com.savemyreceipt.smr.exception.model.CustomException;
 import com.savemyreceipt.smr.infrastructure.GroupMemberRepository;
@@ -15,6 +16,7 @@ import com.savemyreceipt.smr.infrastructure.ReceiptRepository;
 import com.savemyreceipt.smr.utils.DataBucketUtil;
 import com.savemyreceipt.smr.utils.GeminiUtil;
 import com.savemyreceipt.smr.utils.ReceiptInfo;
+import com.savemyreceipt.smr.utils.SendGridUtil;
 import java.io.IOException;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,7 @@ public class ReceiptService {
     private final GroupMemberRepository groupMemberRepository;
     private final DataBucketUtil dataBucketUtil;
     private final GeminiUtil geminiUtil;
+    private final SendGridUtil sendGridUtil;
 
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
@@ -88,14 +91,22 @@ public class ReceiptService {
     }
 
     @Transactional
-    public void updateReceipt(String email, Long receiptId, ReceiptUpdateRequestDto receiptUpdateRequestDto) {
+    public void updateReceipt(String email, Long receiptId, ReceiptUpdateRequestDto receiptUpdateRequestDto)
+        throws IOException {
         Member member = memberRepository.getMemberByEmail(email);
         Receipt receipt = receiptRepository.getReceiptById(receiptId);
+
         if (!receipt.getMember().equals(member)) {
             throw new CustomException(ErrorStatus.UNAUTHORIZED_MEMBER_ACCESS, ErrorStatus.UNAUTHORIZED_MEMBER_ACCESS.getMessage());
         }
+
+        if (receipt.isChecked()) {
+            throw new CustomException(ErrorStatus.RECEIPT_ALREADY_CHECKED, ErrorStatus.RECEIPT_ALREADY_CHECKED.getMessage());
+        }
+
         receipt.updateReceipt(receiptUpdateRequestDto);
         receiptRepository.save(receipt);
+        sendGridUtil.sendDynamicTemplateEmail(findAccountant(receipt), receipt);
     }
 
     @Transactional
@@ -106,5 +117,9 @@ public class ReceiptService {
             throw new CustomException(ErrorStatus.UNAUTHORIZED_MEMBER_ACCESS, ErrorStatus.UNAUTHORIZED_MEMBER_ACCESS.getMessage());
         }
         receiptRepository.delete(receipt);
+    }
+
+    private Member findAccountant(Receipt receipt) {
+        return groupMemberRepository.getGroupMemberByGroupIdAndRole(receipt.getGroup().getId(), Role.ACCOUNTANT).getMember();
     }
 }

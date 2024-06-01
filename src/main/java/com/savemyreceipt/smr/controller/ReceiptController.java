@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -48,7 +49,7 @@ public class ReceiptController {
     public ApiResponseDto<?> updateReceipt(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long receiptId,
-        @RequestBody ReceiptUpdateRequestDto receiptUpdateRequestDto) {
+        @RequestBody ReceiptUpdateRequestDto receiptUpdateRequestDto) throws IOException {
         receiptService.updateReceipt(user.getUsername(), receiptId, receiptUpdateRequestDto);
         return ApiResponseDto.success(SuccessStatus.UPDATE_RECEIPT_SUCCESS);
     }
