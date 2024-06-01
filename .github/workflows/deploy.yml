@@ -20,9 +20,8 @@ env:
   USERNAME: ${{ secrets.USERNAME }}
   KEY:      ${{ secrets.SSH_KEY }}
   PORT:     ${{ secrets.PORT }}
-  INSTANCE_PATH: ./AEYE-INFRA/backend
-  IMAGE_NAME: shinsion/aeye-server
-  GOOGLE_APPLICATION_CREDENTIALS: src/main/resources/${{ secrets.GOOGLE_CREDENTIALS_NAME }}
+  INSTANCE_PATH: ./savemyreceipt-server
+  IMAGE_NAME: shinsion/savemyreceipt-server
 
 
 jobs:
@@ -45,12 +44,13 @@ jobs:
         run: |
           mkdir -p ./src/main/resources
           cd ./src/main/resources
-          echo "${{ secrets.APPLICATION }}" > application.yml
+          echo "${{ secrets.APPLICATION_YML }}" > application.yml
 
       - name: Create Google Credentials JSON
         run: |
           cd ./src/main/resources
-          echo "${{ secrets.GOOGLE_CREDENTIALS }}" | base64 -d > "${{ secrets.GOOGLE_CREDENTIALS_NAME }}"
+          echo "${{ secrets.CLOUD_STORAGE_CREDENTIALS }}" | base64 -d > savemyreceipt-cloud-storage.json
+          echo "${{ secrets.VERTEX_AI_CREDENTIALS }} " | base64 -d > savemyreceipt-vertex-ai.json
 
       - name: Build with Gradle
         run: ./gradlew clean build
