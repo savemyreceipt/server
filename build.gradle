@@ -44,7 +44,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
 	// cloud storage
-	implementation 'org.springframework.cloud:spring-cloud-gcp-starter-storage:1.2.8.RELEASE'
+	implementation 'com.google.cloud:google-cloud-storage:2.39.0'
 
 	// sendgrid
 	implementation 'com.sendgrid:sendgrid-java:4.10.2'
@@ -54,6 +54,8 @@ dependencies {
 
 	// gson
 	implementation 'com.google.code.gson:gson:2.11.0'
+
+	testImplementation 'com.github.tomakehurst:wiremock:3.0.0'
 }
 
 tasks.named('test') {
