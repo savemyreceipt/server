@@ -20,7 +20,7 @@ public enum ErrorStatus {
     /*
      * 401 Unauthorized
      */
-    UNAUTHORIZED_MEMBER_ACCESS(HttpStatus.UNAUTHORIZED, "해당 멤버는 권한이 없습니다."),
+    UNAUTHORIZED_MEMBER_ACCESS(HttpStatus.UNAUTHORIZED, "해당 회원은 권한이 없습니다."),
 
     /*
      * 404 Not Found
@@ -30,6 +30,7 @@ public enum ErrorStatus {
     GROUP_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "그룹 멤버 정보를 찾을 수 없습니다."),
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지를 찾을 수 없습니다."),
     RECEIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "영수증을 찾을 수 없습니다."),
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "알림을 찾을 수 없습니다."),
 
     /*
      * 500 Internal Server Error

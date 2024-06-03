@@ -16,6 +16,7 @@ public enum SuccessStatus {
     GET_GROUP_SUCCESS(HttpStatus.OK, "그룹 조회 성공"),
     SEARCH_GROUP_SUCCESS(HttpStatus.OK, "그룹 검색 성공"),
     GET_RECEIPT_SUCCESS(HttpStatus.OK, "영수증 조회 성공"),
+    GET_NOTIFICATION_LIST_SUCCESS(HttpStatus.OK, "알림 목록 조회 성공"),
 
     /*
      * 201 CREATED
@@ -32,6 +33,7 @@ public enum SuccessStatus {
     UPDATE_GROUP_SUCCESS(HttpStatus.NO_CONTENT, "그룹 정보 수정 성공"),
     UPDATE_RECEIPT_SUCCESS(HttpStatus.NO_CONTENT, "영수증 수정 성공"),
     DELETE_RECEIPT_SUCCESS(HttpStatus.NO_CONTENT, "영수증 삭제 성공"),
+    CHECK_NOTIFICATION_SUCCESS(HttpStatus.NO_CONTENT, "알림 확인 성공"),
     ;
 
     private final HttpStatus httpStatus;
