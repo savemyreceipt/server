@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/receipt")
+@RequestMapping("/receipts")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "Access Token")
 @Tag(name = "Receipt", description = "영수증 관리 API")
@@ -34,7 +34,7 @@ public class ReceiptController {
     private final ReceiptService receiptService;
 
     @Operation(summary = "영수증 업로드", description = "영수증을 업로드하여 서버에 저장하고 분석합니다.")
-    @PostMapping("/upload/{groupId}")
+    @PostMapping("/{groupId}")
     public ApiResponseDto<?> uploadReceipt(@AuthenticationPrincipal User user,
         @RequestPart MultipartFile file,
         @PathVariable Long groupId) {
@@ -45,7 +45,7 @@ public class ReceiptController {
     }
 
     @Operation(summary = "영수증 업데이트 및 확인", description = "영수증을 업데이트하고 확인합니다.")
-    @PutMapping("/update/{receiptId}")
+    @PutMapping("/{receiptId}")
     public ApiResponseDto<?> updateReceipt(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long receiptId,
@@ -64,7 +64,7 @@ public class ReceiptController {
     }
 
     @Operation(summary = "영수증 상세 조회", description = "영수증 상세 정보를 조회합니다.")
-    @GetMapping("/detail/{receiptId}")
+    @GetMapping("/{receiptId}")
     public ApiResponseDto<?> getReceiptInfo(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long receiptId) {

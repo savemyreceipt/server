@@ -3,10 +3,13 @@ package com.savemyreceipt.smr.controller;
 import com.savemyreceipt.smr.DTO.ApiResponseDto;
 import com.savemyreceipt.smr.DTO.group.request.GroupRequestDto;
 import com.savemyreceipt.smr.DTO.group.response.GroupResponseDto;
+import com.savemyreceipt.smr.DTO.member.response.MemberListResponseDto;
 import com.savemyreceipt.smr.DTO.receipt.response.ReceiptListResponseDto;
 import com.savemyreceipt.smr.enums.Role;
+import com.savemyreceipt.smr.exception.ErrorStatus;
 import com.savemyreceipt.smr.exception.SuccessStatus;
 import com.savemyreceipt.smr.service.GroupService;
+import com.savemyreceipt.smr.service.ReceiptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -15,16 +18,19 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/group")
+@RequestMapping("/groups")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "Access Token")
 @Tag(name = "Group", description = "그룹 관리 API")
@@ -52,16 +58,31 @@ public class GroupController {
         return ApiResponseDto.success(SuccessStatus.CREATE_GROUP_SUCCESS);
     }
 
+    @Operation(summary = "그룹 멤버 조회", description = "그룹의 멤버를 조회합니다.")
+    @GetMapping("/{groupId}/members")
+    public ApiResponseDto<MemberListResponseDto> getGroupMembers(@PathVariable Long groupId) {
+        return ApiResponseDto.success(SuccessStatus.GET_GROUP_MEMBER_SUCCESS, groupService.getGroupMembers(groupId));
+    }
+
     @Operation(summary = "그룹 가입", description = "그룹에 가입합니다.")
-    @PostMapping("/join/{groupId}")
+    @PostMapping("/{groupId}/members")
     public ApiResponseDto<?> joinGroup(@Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId, @RequestParam Role role) {
         groupService.joinGroup(user.getUsername(), groupId, role);
         return ApiResponseDto.success(SuccessStatus.JOIN_GROUP_SUCCESS);
     }
 
+    @Operation(summary = "그룹 탈퇴", description = "그룹에서 탈퇴합니다.")
+    @DeleteMapping("/{groupId}/members")
+    public ApiResponseDto<?> leaveGroup(@Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @PathVariable Long groupId) {
+        groupService.leaveGroup(user.getUsername(), groupId);
+        return ApiResponseDto.success(SuccessStatus.LEAVE_GROUP_SUCCESS);
+    }
+
+
     @Operation(summary = "그룹 내 영수증 조회", description = "그룹 내 영수증을 조회합니다. 회계인 경우 전체 영수증을, 일반 사용자인 경우 자신이 업로드한 영수증을 조회합니다.")
-    @GetMapping("/{groupId}/receipt")
+    @GetMapping("/{groupId}/receipts")
     public ApiResponseDto<ReceiptListResponseDto> getReceiptListInGroup(
         @AuthenticationPrincipal User user, @PathVariable Long groupId, @RequestParam int page) {
         return ApiResponseDto.success(SuccessStatus.GET_RECEIPT_SUCCESS, groupService.getReceiptListInGroup(user.getUsername(), groupId, page));

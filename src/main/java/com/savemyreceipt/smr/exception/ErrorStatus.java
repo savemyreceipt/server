@@ -16,6 +16,7 @@ public enum ErrorStatus {
     TOO_MUCH_GROUPS(HttpStatus.BAD_REQUEST, "그룹은 최대 10개까지 가입 가능합니다."),
     ALREADY_JOINED_GROUP(HttpStatus.BAD_REQUEST, "이미 가입한 그룹입니다."),
     RECEIPT_ALREADY_CHECKED(HttpStatus.BAD_REQUEST, "이미 확인한 영수증입니다."),
+    ACCOUNTANT_CANNOT_LEAVE_GROUP(HttpStatus.BAD_REQUEST, "회계담당자는 그룹을 탈퇴할 수 없습니다."),
 
     /*
      * 401 Unauthorized

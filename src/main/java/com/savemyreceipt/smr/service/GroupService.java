@@ -2,6 +2,8 @@ package com.savemyreceipt.smr.service;
 
 import com.savemyreceipt.smr.DTO.group.request.GroupRequestDto;
 import com.savemyreceipt.smr.DTO.group.response.GroupResponseDto;
+import com.savemyreceipt.smr.DTO.member.response.MemberListResponseDto;
+import com.savemyreceipt.smr.DTO.member.response.MemberResponseDto;
 import com.savemyreceipt.smr.DTO.receipt.response.ReceiptListResponseDto;
 import com.savemyreceipt.smr.DTO.receipt.response.ReceiptResponseDto;
 import com.savemyreceipt.smr.domain.Group;
@@ -86,6 +88,17 @@ public class GroupService {
         join(member, group, role);
     }
 
+    @Transactional
+    public void leaveGroup(String email, Long groupId) {
+        Member member = memberRepository.getMemberByEmail(email);
+        Group group = groupRepository.getGroupById(groupId);
+        GroupMember groupMember = groupMemberRepository.getGroupMemberByGroupIdAndMemberId(groupId, member.getId());
+        if (groupMember.getRole().equals(Role.ACCOUNTANT)) {
+            throw new CustomException(ErrorStatus.ACCOUNTANT_CANNOT_LEAVE_GROUP, ErrorStatus.ACCOUNTANT_CANNOT_LEAVE_GROUP.getMessage());
+        }
+        groupMemberRepository.delete(groupMember);
+    }
+
     private void check(Member member, Group group) {
         
         // 회원이 속한 그룹의 수가 10개를 초과할 수 없다.
@@ -108,6 +121,15 @@ public class GroupService {
         groupMemberRepository.save(groupMember);
         notificationService.createNotification(member, "새로운 그룹에 가입했어요.", group.getName() + " 그룹에 가입을 축하드려요! 🎉");
     }
+
+    @Transactional(readOnly = true)
+    public MemberListResponseDto getGroupMembers(Long groupId) {
+        Group group = groupRepository.getGroupById(groupId);
+        List<GroupMember> groupMembers = groupMemberRepository.findByGroupId(groupId);
+        return new MemberListResponseDto(groupMembers.stream().map(GroupMember::getMember).toList().stream().map(
+            MemberResponseDto::of).toList());
+    }
+
 
     @Transactional(readOnly = true)
     public ReceiptListResponseDto getReceiptListInGroup(String email, Long groupId, int page) {
