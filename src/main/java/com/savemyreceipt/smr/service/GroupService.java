@@ -106,7 +106,7 @@ public class GroupService {
             .role(role)
             .build();
         groupMemberRepository.save(groupMember);
-        notificationService.createNotification(member, "새로운 그룹에 가입했어요.", group.getName() + "에 가입을 축하드려요! 🎉");
+        notificationService.createNotification(member, "새로운 그룹에 가입했어요.", group.getName() + " 그룹에 가입을 축하드려요! 🎉");
     }
 
     @Transactional(readOnly = true)
