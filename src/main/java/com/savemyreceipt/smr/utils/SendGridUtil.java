@@ -56,6 +56,8 @@ public class SendGridUtil {
         Personalization personalization = new Personalization();
         personalization.addDynamicTemplateData("accountant_name", member.getName());
         personalization.addDynamicTemplateData("group_name", receipt.getGroup().getName());
+        personalization.addDynamicTemplateData("receipt_owner_name", receipt.getMember().getName());
+        personalization.addDynamicTemplateData("category", receipt.getCategory());
         personalization.addDynamicTemplateData("total_price", receipt.getPrice());
         personalization.addDynamicTemplateData("purchased_at", receipt.getPurchasedAt().format(
             DateTimeFormatter.ISO_LOCAL_DATE));
