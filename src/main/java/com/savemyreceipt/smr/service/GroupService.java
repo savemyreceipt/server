@@ -31,6 +31,7 @@ public class GroupService {
     private final MemberRepository memberRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final ReceiptRepository receiptRepository;
+    private final NotificationService notificationService;
 
     @Transactional(readOnly = true)
     public List<GroupResponseDto> getGroups(String email) {
@@ -105,6 +106,7 @@ public class GroupService {
             .role(role)
             .build();
         groupMemberRepository.save(groupMember);
+        notificationService.createNotification(member, "새로운 그룹에 가입했어요.", group.getName() + "에 가입을 축하드려요! 🎉");
     }
 
     @Transactional(readOnly = true)
