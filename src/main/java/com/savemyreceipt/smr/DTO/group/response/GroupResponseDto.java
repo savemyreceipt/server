@@ -17,10 +17,11 @@ public class GroupResponseDto {
     private String description;
     private Long memberCount;
     private Long receiptCount;
+    private String accountantName;
     private boolean isAccountant;
 
     @Builder
-    public GroupResponseDto(Long id, String name, String city, String organization, String description, Long memberCount, Long receiptCount, boolean isAccountant) {
+    public GroupResponseDto(Long id, String name, String city, String organization, String description, Long memberCount, Long receiptCount, String accountantName, boolean isAccountant) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -28,6 +29,7 @@ public class GroupResponseDto {
         this.description = description;
         this.memberCount = memberCount;
         this.receiptCount = receiptCount;
+        this.accountantName = accountantName;
         this.isAccountant = isAccountant;
     }
 }

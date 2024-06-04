@@ -18,7 +18,6 @@ import com.savemyreceipt.smr.infrastructure.GroupMemberRepository;
 import com.savemyreceipt.smr.infrastructure.GroupRepository;
 import com.savemyreceipt.smr.infrastructure.MemberRepository;
 import com.savemyreceipt.smr.infrastructure.ReceiptRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,6 +51,7 @@ public class GroupService {
                 .description(groupMember.getGroup().getDescription())
                 .memberCount(groupMemberRepository.countByGroupId(groupMember.getGroup().getId()))
                 .receiptCount(receiptRepository.countByGroup(groupMember.getGroup()))
+                .accountantName(findAccountant(groupMember.getGroup()).getName())
                 .isAccountant(groupMember.getRole().equals(Role.ACCOUNTANT))
                 .build()
         );
@@ -70,6 +70,7 @@ public class GroupService {
             .organization(group.getOrganization())
             .description(group.getDescription())
             .memberCount(groupMemberRepository.countByGroupId(group.getId()))
+            .accountantName(findAccountant(group).getName())
             .build());
 
         return new GroupListResponseDto(groupResponseDtos);
@@ -106,6 +107,10 @@ public class GroupService {
             throw new CustomException(ErrorStatus.ACCOUNTANT_CANNOT_LEAVE_GROUP, ErrorStatus.ACCOUNTANT_CANNOT_LEAVE_GROUP.getMessage());
         }
         groupMemberRepository.delete(groupMember);
+    }
+
+    private Member findAccountant(Group group) {
+        return groupMemberRepository.getGroupMemberByGroupIdAndRole(group.getId(), Role.ACCOUNTANT).getMember();
     }
 
     private void check(Member member, Group group) {

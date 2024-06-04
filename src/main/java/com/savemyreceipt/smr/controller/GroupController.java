@@ -3,7 +3,6 @@ package com.savemyreceipt.smr.controller;
 import com.savemyreceipt.smr.DTO.ApiResponseDto;
 import com.savemyreceipt.smr.DTO.group.request.GroupRequestDto;
 import com.savemyreceipt.smr.DTO.group.response.GroupListResponseDto;
-import com.savemyreceipt.smr.DTO.group.response.GroupResponseDto;
 import com.savemyreceipt.smr.DTO.member.response.MemberListResponseDto;
 import com.savemyreceipt.smr.DTO.receipt.response.ReceiptListResponseDto;
 import com.savemyreceipt.smr.enums.Role;
@@ -13,7 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -24,9 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/groups")
@@ -79,7 +75,6 @@ public class GroupController {
         groupService.leaveGroup(user.getUsername(), groupId);
         return ApiResponseDto.success(SuccessStatus.LEAVE_GROUP_SUCCESS);
     }
-
 
     @Operation(summary = "그룹 내 영수증 조회", description = "그룹 내 영수증을 조회합니다. 회계인 경우 전체 영수증을, 일반 사용자인 경우 자신이 업로드한 영수증을 조회합니다.")
     @GetMapping("/{groupId}/receipts")
