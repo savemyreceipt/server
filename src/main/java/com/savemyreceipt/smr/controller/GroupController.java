@@ -2,14 +2,13 @@ package com.savemyreceipt.smr.controller;
 
 import com.savemyreceipt.smr.DTO.ApiResponseDto;
 import com.savemyreceipt.smr.DTO.group.request.GroupRequestDto;
+import com.savemyreceipt.smr.DTO.group.response.GroupListResponseDto;
 import com.savemyreceipt.smr.DTO.group.response.GroupResponseDto;
 import com.savemyreceipt.smr.DTO.member.response.MemberListResponseDto;
 import com.savemyreceipt.smr.DTO.receipt.response.ReceiptListResponseDto;
 import com.savemyreceipt.smr.enums.Role;
-import com.savemyreceipt.smr.exception.ErrorStatus;
 import com.savemyreceipt.smr.exception.SuccessStatus;
 import com.savemyreceipt.smr.service.GroupService;
-import com.savemyreceipt.smr.service.ReceiptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -40,14 +39,15 @@ public class GroupController {
 
     @Operation(summary = "그룹 조회", description = "회원이 속한 그룹을 조회합니다.")
     @GetMapping
-    public ApiResponseDto<List<GroupResponseDto>> getGroups(@AuthenticationPrincipal User user) {
-        return ApiResponseDto.success(SuccessStatus.GET_GROUP_SUCCESS, groupService.getGroups(user.getUsername()));
+    public ApiResponseDto<GroupListResponseDto> getGroups(@AuthenticationPrincipal User user, @RequestParam(defaultValue = "0") int page) {
+        return ApiResponseDto.success(SuccessStatus.GET_GROUP_SUCCESS, groupService.getGroups(user.getUsername(), page));
     }
 
     @Operation(summary = "그룹 검색", description = "그룹 가입을 위해서 그룹을 검색합니다.")
     @GetMapping("/search")
-    public ApiResponseDto<List<GroupResponseDto>> searchGroup(@AuthenticationPrincipal User user, @RequestParam String keyword) {
-        return ApiResponseDto.success(SuccessStatus.SEARCH_GROUP_SUCCESS, groupService.searchGroup(keyword));
+    public ApiResponseDto<GroupListResponseDto> searchGroup(@AuthenticationPrincipal User user,
+        @RequestParam String keyword, @RequestParam(defaultValue = "0") int page) {
+        return ApiResponseDto.success(SuccessStatus.SEARCH_GROUP_SUCCESS, groupService.searchGroup(keyword, page));
     }
 
     @Operation(summary = "그룹 생성", description = "그룹을 생성합니다. 생성한 사람이 회계가 됩니다.")
@@ -60,8 +60,8 @@ public class GroupController {
 
     @Operation(summary = "그룹 멤버 조회", description = "그룹의 멤버를 조회합니다.")
     @GetMapping("/{groupId}/members")
-    public ApiResponseDto<MemberListResponseDto> getGroupMembers(@PathVariable Long groupId) {
-        return ApiResponseDto.success(SuccessStatus.GET_GROUP_MEMBER_SUCCESS, groupService.getGroupMembers(groupId));
+    public ApiResponseDto<MemberListResponseDto> getGroupMembers(@PathVariable Long groupId, @RequestParam(defaultValue = "0") int page) {
+        return ApiResponseDto.success(SuccessStatus.GET_GROUP_MEMBER_SUCCESS, groupService.getGroupMembers(groupId, page));
     }
 
     @Operation(summary = "그룹 가입", description = "그룹에 가입합니다.")
@@ -84,7 +84,7 @@ public class GroupController {
     @Operation(summary = "그룹 내 영수증 조회", description = "그룹 내 영수증을 조회합니다. 회계인 경우 전체 영수증을, 일반 사용자인 경우 자신이 업로드한 영수증을 조회합니다.")
     @GetMapping("/{groupId}/receipts")
     public ApiResponseDto<ReceiptListResponseDto> getReceiptListInGroup(
-        @AuthenticationPrincipal User user, @PathVariable Long groupId, @RequestParam int page) {
+        @AuthenticationPrincipal User user, @PathVariable Long groupId, @RequestParam(defaultValue = "0") int page) {
         return ApiResponseDto.success(SuccessStatus.GET_RECEIPT_SUCCESS, groupService.getReceiptListInGroup(user.getUsername(), groupId, page));
     }
 

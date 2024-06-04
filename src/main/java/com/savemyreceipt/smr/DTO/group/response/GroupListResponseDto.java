@@ -1,4 +1,4 @@
-package com.savemyreceipt.smr.DTO.member.response;
+package com.savemyreceipt.smr.DTO.group.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,8 @@ import org.springframework.data.domain.Page;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberListResponseDto {
+public class GroupListResponseDto {
 
-    private Page<MemberResponseDto> memberList;
+    private Page<GroupResponseDto> groupList;
+
 }

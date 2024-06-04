@@ -1,6 +1,7 @@
 package com.savemyreceipt.smr.service;
 
 import com.savemyreceipt.smr.DTO.group.request.GroupRequestDto;
+import com.savemyreceipt.smr.DTO.group.response.GroupListResponseDto;
 import com.savemyreceipt.smr.DTO.group.response.GroupResponseDto;
 import com.savemyreceipt.smr.DTO.member.response.MemberListResponseDto;
 import com.savemyreceipt.smr.DTO.member.response.MemberResponseDto;
@@ -36,12 +37,14 @@ public class GroupService {
     private final NotificationService notificationService;
 
     @Transactional(readOnly = true)
-    public List<GroupResponseDto> getGroups(String email) {
+    public GroupListResponseDto getGroups(String email, int page) {
         Member member = memberRepository.getMemberByEmail(email);
-        List<GroupMember> groupMembers = groupMemberRepository.findByMemberId(member.getId());
+        Pageable pageable = PageRequest.of(page, 10);
 
-        return groupMembers.stream()
-            .map(groupMember -> GroupResponseDto.builder()
+        Page<GroupMember> groupMembers = groupMemberRepository.findByMemberId(member.getId(), pageable);
+
+        Page<GroupResponseDto> groupResponseDtos = groupMembers.map(
+            groupMember -> GroupResponseDto.builder()
                 .id(groupMember.getGroup().getId())
                 .name(groupMember.getGroup().getName())
                 .city(groupMember.getGroup().getCity())
@@ -50,21 +53,27 @@ public class GroupService {
                 .memberCount(groupMemberRepository.countByGroupId(groupMember.getGroup().getId()))
                 .receiptCount(receiptRepository.countByGroup(groupMember.getGroup()))
                 .isAccountant(groupMember.getRole().equals(Role.ACCOUNTANT))
-                .build()).toList();
+                .build()
+        );
+        return new GroupListResponseDto(groupResponseDtos);
     }
 
     @Transactional(readOnly = true)
-    public List<GroupResponseDto> searchGroup(String keyword) {
-        List<Group> groups = groupRepository.findByNameContaining(keyword);
-        return groups.stream()
-            .map(group -> GroupResponseDto.builder()
-                .id(group.getId())
-                .name(group.getName())
-                .city(group.getCity())
-                .organization(group.getOrganization())
-                .description(group.getDescription())
-                .memberCount(groupMemberRepository.countByGroupId(group.getId()))
-                .build()).toList();
+    public GroupListResponseDto searchGroup(String keyword, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Group> groups = groupRepository.findByNameContaining(keyword, pageable);
+
+        Page<GroupResponseDto> groupResponseDtos = groups.map(group -> GroupResponseDto.builder()
+            .id(group.getId())
+            .name(group.getName())
+            .city(group.getCity())
+            .organization(group.getOrganization())
+            .description(group.getDescription())
+            .memberCount(groupMemberRepository.countByGroupId(group.getId()))
+            .build());
+
+        return new GroupListResponseDto(groupResponseDtos);
+
     }
 
     @Transactional
@@ -123,11 +132,15 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public MemberListResponseDto getGroupMembers(Long groupId) {
-        Group group = groupRepository.getGroupById(groupId);
-        List<GroupMember> groupMembers = groupMemberRepository.findByGroupId(groupId);
-        return new MemberListResponseDto(groupMembers.stream().map(GroupMember::getMember).toList().stream().map(
-            MemberResponseDto::of).toList());
+    public MemberListResponseDto getGroupMembers(Long groupId, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<GroupMember> groupMembers = groupMemberRepository.findByGroupId(groupId, pageable);
+
+        Page<MemberResponseDto> memberResponseDtos = groupMembers.map(
+            groupMember -> MemberResponseDto.of(groupMember.getMember())
+        );
+
+        return new MemberListResponseDto(memberResponseDtos);
     }
 
 

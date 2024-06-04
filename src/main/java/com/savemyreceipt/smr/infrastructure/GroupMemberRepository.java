@@ -8,6 +8,8 @@ import com.savemyreceipt.smr.exception.model.CustomException;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.text.html.Option;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -37,7 +39,11 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
 
     List<GroupMember> findByMemberId(Long memberId);
 
+    Page<GroupMember> findByMemberId(Long memberId, Pageable pageable);
+
     List<GroupMember> findByGroupId(Long groupId);
+
+    Page<GroupMember> findByGroupId(Long groupId, Pageable pageable);
 
     @Query("select gm.group from GroupMember gm where gm.member.id = :memberId")
     List<Group> findGroupsByMemberId(Long memberId);

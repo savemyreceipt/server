@@ -10,6 +10,9 @@ import com.savemyreceipt.smr.infrastructure.MemberRepository;
 import com.savemyreceipt.smr.infrastructure.NotificationRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +24,13 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     @Transactional(readOnly = true)
-    public NotificationListResponseDto getNotificationList(String username) {
+    public NotificationListResponseDto getNotificationList(String username, int page) {
         Member member = memberRepository.getMemberByEmail(username);
-        List<Notification> notifications = notificationRepository.findByMemberAndCheckedFalse(member);
-        return new NotificationListResponseDto(notifications.stream().map(NotificationResponseDto::of).toList());
+        Pageable pageable = PageRequest.of(page, 10);
+
+        Page<Notification> notifications = notificationRepository.findByMemberAndCheckedFalse(member, pageable);
+        Page<NotificationResponseDto> notificationResponseDtos = notifications.map(NotificationResponseDto::of);
+        return new NotificationListResponseDto(notificationResponseDtos);
     }
 
     @Transactional
