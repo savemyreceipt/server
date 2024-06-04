@@ -81,8 +81,8 @@ jobs:
           port: ${{ env.PORT }}
           script: |
             cd ${{ env.INSTANCE_PATH }}
-            docker stop aeye-backend-server || true
-            docker rm aeye-backend-server || true
+            docker stop savemyreceipt-server || true
+            docker rm savemyreceipt-server || true
             docker rmi ${{ env.IMAGE_NAME }}:latest || true
             docker pull ${{ env.IMAGE_NAME }}:${{ env.DATE }}-${{ env.COMMIT_SHA }}
             docker tag ${{ env.IMAGE_NAME }}:${{ env.DATE }}-${{ env.COMMIT_SHA }} ${{ env.IMAGE_NAME }}:latest
