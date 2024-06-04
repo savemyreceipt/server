@@ -38,7 +38,7 @@ public class GroupService {
     @Transactional(readOnly = true)
     public GroupListResponseDto getGroups(String email, int page) {
         Member member = memberRepository.getMemberByEmail(email);
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 12);
 
         Page<GroupMember> groupMembers = groupMemberRepository.findByMemberId(member.getId(), pageable);
 
@@ -60,7 +60,7 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public GroupListResponseDto searchGroup(String keyword, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 12);
         Page<Group> groups = groupRepository.findByNameContaining(keyword, pageable);
 
         Page<GroupResponseDto> groupResponseDtos = groups.map(group -> GroupResponseDto.builder()
@@ -138,7 +138,7 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public MemberListResponseDto getGroupMembers(Long groupId, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 20);
         Page<GroupMember> groupMembers = groupMemberRepository.findByGroupId(groupId, pageable);
 
         Page<MemberResponseDto> memberResponseDtos = groupMembers.map(
