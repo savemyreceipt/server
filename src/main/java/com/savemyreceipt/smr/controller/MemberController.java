@@ -29,10 +29,8 @@ public class MemberController {
 
     @Operation(summary = "사용자 조회", description = "사용자 정보를 조회합니다.")
     @GetMapping
-    public ApiResponseDto<MemberResponseDto> getMember(@Parameter(hidden = true) @AuthenticationPrincipal
-        User user) {
-        return ApiResponseDto.success(
-            SuccessStatus.GET_MEMBER_SUCCESS, memberService.getMember(user.getUsername()));
+    public ApiResponseDto<MemberResponseDto> getMember(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
+        return ApiResponseDto.success(SuccessStatus.GET_MEMBER_SUCCESS, memberService.getMember(user.getUsername()));
     }
 
     @Operation(summary = "사용자 정보 수정", description = "사용자 정보를 수정합니다.")

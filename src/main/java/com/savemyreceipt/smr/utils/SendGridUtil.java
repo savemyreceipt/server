@@ -27,8 +27,11 @@ public class SendGridUtil {
     @Value("${spring.sendgrid.from}")
     private String fromEmail;
 
-    @Value("${spring.sendgrid.template-id}")
-    private String templateId;
+    @Value("${spring.sendgrid.receipt-template-id}")
+    private String receiptTemplateId;
+
+    @Value("${spring.sendgrid.signup-template-id}")
+    private String signupTemplateId;
 
     // Sendgrid 공식 가이드 참고
     // https://github.com/sendgrid/sendgrid-java
@@ -45,13 +48,30 @@ public class SendGridUtil {
         send(mail);
     }
 
-    public void sendDynamicTemplateEmail(Member member, Receipt receipt) throws IOException {
+    public void sendSignupEmail(Member member) throws IOException {
         Email from = new Email(fromEmail);
         Email to = new Email(member.getEmail());
         Mail mail = new Mail();
 
         mail.setFrom(from);
-        mail.setTemplateId(templateId);
+        mail.setTemplateId(signupTemplateId);
+
+        Personalization personalization = new Personalization();
+        personalization.addDynamicTemplateData("name", member.getName());
+        personalization.addTo(to);
+
+        mail.addPersonalization(personalization);
+
+        send(mail);
+    }
+
+    public void sendReceiptEmail(Member member, Receipt receipt) throws IOException {
+        Email from = new Email(fromEmail);
+        Email to = new Email(member.getEmail());
+        Mail mail = new Mail();
+
+        mail.setFrom(from);
+        mail.setTemplateId(receiptTemplateId);
 
         Personalization personalization = new Personalization();
         personalization.addDynamicTemplateData("accountant_name", member.getName());

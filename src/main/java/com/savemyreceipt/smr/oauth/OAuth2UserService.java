@@ -1,7 +1,12 @@
 package com.savemyreceipt.smr.oauth;
 
 import com.savemyreceipt.smr.domain.Member;
+import com.savemyreceipt.smr.exception.ErrorStatus;
+import com.savemyreceipt.smr.exception.model.CustomException;
 import com.savemyreceipt.smr.infrastructure.MemberRepository;
+import com.savemyreceipt.smr.service.NotificationService;
+import com.savemyreceipt.smr.utils.SendGridUtil;
+import java.io.IOException;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,6 +23,8 @@ import org.springframework.stereotype.Service;
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
+    private final NotificationService notificationService;
+    private final SendGridUtil sendGridUtil;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -44,12 +51,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
     private Member getMember(OAuthAttributes attributes, String email) {
         Member member = memberRepository.findByOauth2Id(attributes.getOAuth2UserInfo().getId()).orElse(null);
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication != null) {
-//            return saveMember(attributes, email);
-//        }
-
         if (member == null) {
             return saveMember(attributes);
         }
@@ -58,12 +59,13 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
     private Member saveMember(OAuthAttributes attributes) {
         Member member = attributes.toEntity(attributes.getOAuth2UserInfo());
-        return memberRepository.save(member);
+        memberRepository.save(member);
+        notificationService.createNotification(member, "회원가입 완료", member.getName()+ "님, 만나서 반가워요! 👋");
+        try {
+            sendGridUtil.sendSignupEmail(member);
+        } catch (IOException e) {
+            throw new CustomException(ErrorStatus.EMAIL_SEND_FAILED, ErrorStatus.EMAIL_SEND_FAILED.getMessage());
+        }
+        return member;
     }
-
-//    private Member saveMember(OAuthAttributes attributes, String email) {
-//        Member member = memberRepository.getMemberByEmail(email);
-//        member.changeOauth2Id(attributes.getOAuth2UserInfo().getId());
-//        return memberRepository.save(member);
-//    }
 }

@@ -107,7 +107,7 @@ public class ReceiptService {
 
         receipt.updateReceipt(receiptUpdateRequestDto);
         receiptRepository.save(receipt);
-        sendGridUtil.sendDynamicTemplateEmail(findAccountant(receipt), receipt);
+        sendGridUtil.sendReceiptEmail(findAccountant(receipt), receipt);
         notificationService.createNotification(findAccountant(receipt), "새로운 영수증이 도착했어요.", receipt.getGroup() + " 그룹에 새로운 영수증이 도착했어요! 확인해주세요! 🧾");
     }
 
