@@ -49,6 +49,11 @@ public class GeminiUtil {
                     "Extract the purchase date and total price from this receipt. Using this JSON schema: Receipt = {\"purchase_date\": str, \"total_price\": Long}. The purchase date should be in the format yyyy-MM-dd, and the price should contain only numbers. If you cannot figure out the exact date or price, then just leave it as null."
                 ));
             log.info("response: {}", response);
+
+            if (response.getCandidatesList().isEmpty() || response.getCandidates(0).getContent().getPartsList().isEmpty()) {
+                throw new CustomException(ErrorStatus.IMAGE_PROCESS_FAILED, ErrorStatus.IMAGE_PROCESS_FAILED.getMessage());
+            }
+
             String json = response.getCandidates(0).getContent().getParts(0).getText();
             log.info("json: {}", json);
             return jsonParse(json);

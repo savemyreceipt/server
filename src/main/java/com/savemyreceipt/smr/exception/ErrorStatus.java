@@ -37,7 +37,7 @@ public enum ErrorStatus {
      * 500 Internal Server Error
      */
     IMAGE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다."),
-    IMAGE_PROCESS_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 처리에 실패했습니다. (Gemini)"),
+    IMAGE_PROCESS_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 처리에 실패했습니다. (Gemini) 영수증은 서버에 제대로 저장되었습니다."),
     EMAIL_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 전송에 실패했습니다."),
     ;
 
