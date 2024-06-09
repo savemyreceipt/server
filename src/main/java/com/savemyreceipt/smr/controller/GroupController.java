@@ -3,6 +3,7 @@ package com.savemyreceipt.smr.controller;
 import com.savemyreceipt.smr.DTO.ApiResponseDto;
 import com.savemyreceipt.smr.DTO.group.request.GroupRequestDto;
 import com.savemyreceipt.smr.DTO.group.response.GroupListResponseDto;
+import com.savemyreceipt.smr.DTO.group.response.GroupResponseDto;
 import com.savemyreceipt.smr.DTO.member.response.MemberListResponseDto;
 import com.savemyreceipt.smr.DTO.receipt.response.ReceiptListResponseDto;
 import com.savemyreceipt.smr.enums.Role;
@@ -37,6 +38,12 @@ public class GroupController {
     @GetMapping
     public ApiResponseDto<GroupListResponseDto> getGroups(@AuthenticationPrincipal User user, @RequestParam(defaultValue = "0") int page) {
         return ApiResponseDto.success(SuccessStatus.GET_GROUP_SUCCESS, groupService.getGroups(user.getUsername(), page));
+    }
+
+    @Operation(summary = "그룹 상세 조회", description = "그룹의 상세 정보를 조회합니다.")
+    @GetMapping("/{groupId}")
+    public ApiResponseDto<GroupResponseDto> getGroup(@AuthenticationPrincipal User user, @PathVariable Long groupId) {
+        return ApiResponseDto.success(SuccessStatus.GET_GROUP_SUCCESS, groupService.getGroup(user.getUsername(), groupId));
     }
 
     @Operation(summary = "그룹 검색", description = "그룹 가입을 위해서 그룹을 검색합니다.")

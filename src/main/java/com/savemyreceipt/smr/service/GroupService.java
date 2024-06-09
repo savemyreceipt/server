@@ -59,6 +59,24 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
+    public GroupResponseDto getGroup(String email, Long groupId) {
+        Member member = memberRepository.getMemberByEmail(email);
+        Group group = groupRepository.getGroupById(groupId);
+        GroupMember groupMember = groupMemberRepository.getGroupMemberByGroupIdAndMemberId(groupId, member.getId());
+        return GroupResponseDto.builder()
+            .id(group.getId())
+            .name(group.getName())
+            .city(group.getCity())
+            .organization(group.getOrganization())
+            .description(group.getDescription())
+            .memberCount(groupMemberRepository.countByGroupId(group.getId()))
+            .receiptCount(receiptRepository.countByGroup(group))
+            .accountantName(findAccountant(group).getName())
+            .isAccountant(groupMember.getRole().equals(Role.ACCOUNTANT))
+            .build();
+    }
+
+    @Transactional(readOnly = true)
     public GroupListResponseDto searchGroup(String keyword, int page) {
         Pageable pageable = PageRequest.of(page, 12);
         Page<Group> groups = groupRepository.findByNameContaining(keyword, pageable);
