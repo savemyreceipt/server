@@ -125,6 +125,7 @@ public class GroupService {
             throw new CustomException(ErrorStatus.ACCOUNTANT_CANNOT_LEAVE_GROUP, ErrorStatus.ACCOUNTANT_CANNOT_LEAVE_GROUP.getMessage());
         }
         groupMemberRepository.delete(groupMember);
+        notificationService.createNotification(member, "그룹을 탈퇴했어요.", group.getName() + " 그룹을 탈퇴했어요. 다음에 또 만나요! 👋");
     }
 
     private Member findAccountant(Group group) {
