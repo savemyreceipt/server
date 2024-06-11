@@ -28,7 +28,7 @@ public class NotificationService {
         Member member = memberRepository.getMemberByEmail(username);
         Pageable pageable = PageRequest.of(page, 10);
 
-        Page<Notification> notifications = notificationRepository.findByMemberAndCheckedFalse(member, pageable);
+        Page<Notification> notifications = notificationRepository.findByMemberAndCheckedFalseOrderByCreatedAtDesc(member, pageable);
         Page<NotificationResponseDto> notificationResponseDtos = notifications.map(NotificationResponseDto::of);
         return new NotificationListResponseDto(notificationResponseDtos);
     }

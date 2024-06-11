@@ -14,7 +14,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     List<Notification> findByMemberAndCheckedFalse(Member member);
 
-    Page<Notification> findByMemberAndCheckedFalse(Member member, Pageable pageable);
+    Page<Notification> findByMemberAndCheckedFalseOrderByCreatedAtDesc(Member member, Pageable pageable);
 
     Optional<Notification> findById(Long id);
 
