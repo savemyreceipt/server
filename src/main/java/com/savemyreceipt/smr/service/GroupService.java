@@ -88,6 +88,7 @@ public class GroupService {
             .organization(group.getOrganization())
             .description(group.getDescription())
             .memberCount(groupMemberRepository.countByGroupId(group.getId()))
+            .receiptCount(receiptRepository.countByGroup(group))
             .accountantName(findAccountant(group).getName())
             .build());
 
