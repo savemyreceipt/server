@@ -20,7 +20,7 @@ public interface ReceiptRepository extends JpaRepository<Receipt, Long> {
 
     Long countByGroup(Group group);
 
-    @Query("select r from Receipt r where r.member = :member AND r.group = :group")
+    @Query("select r from Receipt r where r.member = :member AND r.group = :group order by r.createdAt desc")
     Page<Receipt> getReceiptListInGroup(@Param("member")Member member, @Param("group")Group group, Pageable pageable);
 
     default Receipt getReceiptById(Long id) {
