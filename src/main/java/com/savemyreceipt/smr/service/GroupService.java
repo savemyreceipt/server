@@ -176,12 +176,12 @@ public class GroupService {
         GroupMember groupMember = groupMemberRepository.getGroupMemberByGroupIdAndMemberId(groupId, member.getId());
         Pageable pageable = PageRequest.of(page, 10);
 
-        // 회계는 그룹 내 모든 영수증을 조회할 수 있다.
-        if (groupMember.getRole().equals(Role.ACCOUNTANT)) {
-            Page<Receipt> receiptPage = receiptRepository.getReceiptListInGroup(group, pageable);
-            Page<ReceiptResponseDto> receiptResponseDtos = receiptPage.map(ReceiptResponseDto::of);
-            return new ReceiptListResponseDto(receiptResponseDtos);
-        }
+//        // 회계는 그룹 내 모든 영수증을 조회할 수 있다.
+//        if (groupMember.getRole().equals(Role.ACCOUNTANT)) {
+//            Page<Receipt> receiptPage = receiptRepository.getReceiptListInGroup(group, pageable);
+//            Page<ReceiptResponseDto> receiptResponseDtos = receiptPage.map(ReceiptResponseDto::of);
+//            return new ReceiptListResponseDto(receiptResponseDtos);
+//        }
 
         // 일반 사용자는 그룹 내 자신이 업로드한 영수증만 조회할 수 있다.
         Page<Receipt> receiptPage = receiptRepository.getReceiptListInGroup(member, group, pageable);
