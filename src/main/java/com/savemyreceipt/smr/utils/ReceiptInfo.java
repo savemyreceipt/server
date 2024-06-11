@@ -24,4 +24,7 @@ public class ReceiptInfo {
 
     @JsonProperty("total_price")
     private Long totalPrice;
+
+    @JsonProperty("category")
+    private String category;
 }

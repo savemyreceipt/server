@@ -46,7 +46,7 @@ public class GeminiUtil {
             GenerateContentResponse response = model.generateContent(
                 ContentMaker.fromMultiModalData(
                     PartMaker.fromMimeTypeAndData(mimeType, imageUri),
-                    "Extract the purchase date and total price from this receipt. Using this JSON schema: Receipt = {\"purchase_date\": str, \"total_price\": Long}. The purchase date should be in the format yyyy-MM-dd, and the price should contain only numbers. If you cannot figure out the exact date or price, then just leave it as null."
+                    "Extract the purchase date, total price and category from this receipt. Using this JSON schema: Receipt = {\"purchase_date\": str, \"total_price\": Long, \"category\": str}. The purchase date should be in the format yyyy-MM-dd, and the price should contain only numbers. Category should be one of this list: 식비, 교통비, 행사비. If you cannot figure out the exact date, price or category, then just leave it as null."
                 ));
             log.info("response: {}", response);
 

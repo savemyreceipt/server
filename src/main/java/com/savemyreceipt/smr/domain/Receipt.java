@@ -67,6 +67,7 @@ public class Receipt extends AuditingTimeEntity {
     public void updateReceipt(ReceiptInfo receiptInfo) {
         this.purchasedAt = receiptInfo.getPurchaseDate();
         this.price = receiptInfo.getTotalPrice();
+        this.category = receiptInfo.getCategory();
     }
 
     public void updateReceipt(ReceiptUpdateRequestDto receiptUpdateRequestDto) {
