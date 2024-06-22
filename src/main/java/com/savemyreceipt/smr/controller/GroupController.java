@@ -50,7 +50,7 @@ public class GroupController {
     @GetMapping("/search")
     public ApiResponseDto<GroupListResponseDto> searchGroup(@AuthenticationPrincipal User user,
         @RequestParam String keyword, @RequestParam(defaultValue = "0") int page) {
-        return ApiResponseDto.success(SuccessStatus.SEARCH_GROUP_SUCCESS, groupService.searchGroup(keyword, page));
+        return ApiResponseDto.success(SuccessStatus.SEARCH_GROUP_SUCCESS, groupService.searchGroup(user.getUsername(), keyword, page));
     }
 
     @Operation(summary = "그룹 생성", description = "그룹을 생성합니다. 생성한 사람이 회계가 됩니다.")

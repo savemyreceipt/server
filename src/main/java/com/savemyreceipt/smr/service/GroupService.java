@@ -77,10 +77,11 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public GroupListResponseDto searchGroup(String keyword, int page) {
+    public GroupListResponseDto searchGroup(String email, String keyword, int page) {
+        Member member = memberRepository.getMemberByEmail(email);
         Pageable pageable = PageRequest.of(page, 12);
 //        Page<Group> groups = groupRepository.findByNameContaining(keyword, pageable);
-        Page<Group> groups = groupRepository.findByNameContainingOrderByMemberCountDesc(keyword, pageable);
+        Page<Group> groups = groupRepository.findByNameContainingOrderByMemberCountDesc(keyword, member.getId(), pageable);
 
         Page<GroupResponseDto> groupResponseDtos = groups.map(group -> GroupResponseDto.builder()
             .id(group.getId())
