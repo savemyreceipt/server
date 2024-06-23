@@ -13,6 +13,7 @@ public class ReceiptResponseDto {
     private String imageUri;
     private String category;
     private String description;
+    private String memo;
     private LocalDate purchaseDate;
     private Long price;
     private boolean isChecked;
@@ -23,6 +24,7 @@ public class ReceiptResponseDto {
             .imageUri(receipt.getImageUri())
             .category(receipt.getCategory())
             .description(receipt.getDescription())
+            .memo(receipt.getMemo())
             .purchaseDate(receipt.getPurchasedAt())
             .price(receipt.getPrice())
             .isChecked(receipt.isChecked())
