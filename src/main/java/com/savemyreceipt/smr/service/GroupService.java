@@ -63,6 +63,7 @@ public class GroupService {
         Member member = memberRepository.getMemberByEmail(email);
         Group group = groupRepository.getGroupById(groupId);
         GroupMember groupMember = groupMemberRepository.getGroupMemberByGroupIdAndMemberId(groupId, member.getId());
+        Long totalExpenditure = receiptRepository.findTotalPriceByGroupId(groupId);
         return GroupResponseDto.builder()
             .id(group.getId())
             .name(group.getName())
@@ -71,6 +72,7 @@ public class GroupService {
             .description(group.getDescription())
             .memberCount(groupMemberRepository.countByGroupId(group.getId()))
             .receiptCount(receiptRepository.countByGroup(group))
+            .totalExpenditure(totalExpenditure == null ? 0 : totalExpenditure)
             .accountantName(findAccountant(group).getName())
             .isAccountant(groupMember.getRole().equals(Role.ACCOUNTANT))
             .build();

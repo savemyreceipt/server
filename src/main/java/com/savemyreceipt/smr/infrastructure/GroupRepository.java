@@ -23,10 +23,10 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query("SELECT g FROM Group g LEFT JOIN GroupMember gm ON g.id = gm.group.id " +
         "WHERE g.name LIKE %:keyword% AND " +
-        "g.id NOT IN (SELECT gm.group.id FROM GroupMember gm WHERE gm.member.id = :member_id) " +
+        "g.id NOT IN (SELECT gm.group.id FROM GroupMember gm WHERE gm.member.id = :memberId) " +
         "GROUP BY g.id " +
         "ORDER BY COUNT(gm.id) DESC")
-    Page<Group> findByNameContainingOrderByMemberCountDesc(@Param("keyword") String keyword, @Param("member_id") Long memberId, Pageable pageable);
+    Page<Group> findByNameContainingOrderByMemberCountDesc(@Param("keyword") String keyword, @Param("memberId") Long memberId, Pageable pageable);
 
     default Group getGroupById(Long id) {
         return findById(id).orElseThrow(

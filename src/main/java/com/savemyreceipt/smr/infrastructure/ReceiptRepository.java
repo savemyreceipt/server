@@ -5,6 +5,7 @@ import com.savemyreceipt.smr.domain.Member;
 import com.savemyreceipt.smr.domain.Receipt;
 import com.savemyreceipt.smr.exception.ErrorStatus;
 import com.savemyreceipt.smr.exception.model.CustomException;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +20,9 @@ public interface ReceiptRepository extends JpaRepository<Receipt, Long> {
     Page<Receipt> getReceiptListInGroup(Group group, Pageable pageable);
 
     Long countByGroup(Group group);
+
+    @Query("select sum(r.price) from Receipt r where r.group.id = :groupId")
+    Long findTotalPriceByGroupId(@Param("groupId") Long groupId);
 
     @Query("select r from Receipt r where r.member = :member AND r.group = :group order by r.createdAt desc")
     Page<Receipt> getReceiptListInGroup(@Param("member")Member member, @Param("group")Group group, Pageable pageable);
