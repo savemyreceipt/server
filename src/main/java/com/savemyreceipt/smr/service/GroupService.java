@@ -130,7 +130,7 @@ public class GroupService {
             throw new CustomException(ErrorStatus.ACCOUNTANT_CANNOT_LEAVE_GROUP, ErrorStatus.ACCOUNTANT_CANNOT_LEAVE_GROUP.getMessage());
         }
         groupMemberRepository.delete(groupMember);
-        notificationService.createNotification(member, "[그룹 탈퇴]", group.getName() + " 그룹을 탈퇴했어요. 다음에 또 만나요! 👋");
+        notificationService.createNotification(member, "그룹 탈퇴", group.getName() + " 그룹을 탈퇴했어요. 다음에 또 만나요! 👋");
     }
 
     private Member findAccountant(Group group) {
@@ -157,7 +157,7 @@ public class GroupService {
             .role(role)
             .build();
         groupMemberRepository.save(groupMember);
-        notificationService.createNotification(member, "[그룹 가입]", group.getName() + " 그룹에 가입을 축하드려요! 🎉");
+        notificationService.createNotification(member, "그룹 가입", group.getName() + " 그룹 가입을 축하드려요! 🎉");
     }
 
     @Transactional(readOnly = true)
